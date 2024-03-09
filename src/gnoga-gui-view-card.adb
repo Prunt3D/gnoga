@@ -259,7 +259,6 @@ package body Gnoga.Gui.View.Card is
          L : Gnoga.Gui.Element.Element_Type;
       begin
          L.Attach_Using_Parent (Item, ID => Item.ID & "_a");
-         Parent.Height (L.Offset_Top * 2 + L.Client_Height);
       end;
 
       Item.Card_Name := Card;
