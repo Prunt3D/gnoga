@@ -142,8 +142,6 @@ package body Gnoga.Gui.View.Card is
          View.Element_Map.Include ("current", Gnoga.Gui.Element.Pointer_To_Element_Class (Current));
 
          Current.Display ("block");
-         Current.Box_Height (View.Height);
-         Current.Box_Width (View.Width);
       end if;
    end Show_Card;
 
