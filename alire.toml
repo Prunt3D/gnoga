@@ -20,4 +20,7 @@ macos   = { Target_OS = "OSX", PRJ_TARGET = "OSX" }
 [[depends-on]]
 gnat = ">=2021 | (>=12 & <2000)"
 simple_components = "^4.62.0"
-uxstrings = "~0.4.0+alpha-20220803"
+uxstrings = "*"
+
+[[pins]]
+uxstrings = { path = "../UXStrings" }
