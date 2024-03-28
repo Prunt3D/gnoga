@@ -1341,6 +1341,7 @@ package body Gnoga.Gui.Element.Form is
    is
    begin
       Element.Create_Element (Form => Form, Input_Type => "number", Value => Value, Name => Name, ID => ID);
+      Element.Step ("any");
    end Create;
 
    -------------------------------------------------------------------------
