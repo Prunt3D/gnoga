@@ -3,7 +3,7 @@ with "components.gpr";
 with "components-connections_server.gpr";
 with "components-connections_server-http_server.gpr";
 with "xpm/xpm_parser.gpr";
-with "lib_uxstrings1.gpr";
+with "lib_uxstrings.gpr";
 with "components/plugins.gpr";
 
 library project Lib_Gnoga is
