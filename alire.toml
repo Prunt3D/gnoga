@@ -16,9 +16,9 @@ project-files = ["lib_gnoga.gpr"]
 UXS_VARIANT = "UXS1"
 
 [gpr-set-externals.'case(os)']
-linux   = { Target_OS = "Linux", PRJ_TARGET = "Linux" }
-windows = { Target_OS = "Windows", PRJ_TARGET = "Windows" }
-macos   = { Target_OS = "OSX", PRJ_TARGET = "OSX" }
+linux   = { PRJ_TARGET = "Linux" }
+windows = { PRJ_TARGET = "Windows" }
+macos   = { PRJ_TARGET = "OSX" }
 
 [[depends-on]]
 gnat = ">=2021 | (>=12 & <2000)"
