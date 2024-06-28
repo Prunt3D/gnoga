@@ -23,7 +23,7 @@ macos   = { PRJ_TARGET = "OSX" }
 [[depends-on]]
 gnat = ">=2021 | (>=12 & <2000)"
 simple_components = "^4.62.0"
-uxstrings = "=0.7.0+alpha-20240406"
+uxstrings = "*"
 
 [[pins]]
-uxstrings = { url = "https://github.com/Blady-Com/UXStrings.git", commit = "7594167af110e2f9dfc96a248a0e0f3debdd7ba9" }
+uxstrings = { url = "https://github.com/Prunt3D/UXStrings.git", commit = "0bc533a69242e4ebc3c69de42349c0219a6bdf9a" }
