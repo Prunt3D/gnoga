@@ -1,0 +1,12 @@
+<package>
+
+  <resource name='Gnoga.Embedded_Resources' format='binary'
+            type='access constant Ada.Streams.Stream_Element_Array'>
+    <install mode='copy'>
+      <fileset dir="resources">
+        <include name="**/*"/>
+      </fileset>
+    </install>
+  </resource>
+
+</package>

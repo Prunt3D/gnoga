@@ -114,7 +114,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
 
    procedure Accumulate_Body
              (  Client  : in out HTTP_Client;
-                Content : access Stream_Element_Array
+                Content : access constant Stream_Element_Array
              )  is
       type Content_Item_Ptr is access Content_Item;
       for Content_Item_Ptr'Storage_Pool use Client.Pool;

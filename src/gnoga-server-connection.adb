@@ -48,9 +48,8 @@ with GNAT.Sockets.Server;                               use GNAT.Sockets.Server;
 with GNAT.Sockets.Connection_State_Machine.HTTP_Server; use GNAT.Sockets.Connection_State_Machine.HTTP_Server;
 
 with Gnoga.Server.Mime;
-with Gnoga.Application;
 with Gnoga.Server.Connection.Common; use Gnoga.Server.Connection.Common;
-with Gnoga.Server.Template_Parser.Simple;
+with Gnoga.Embedded_Resources;
 
 with Strings_Edit.Quoted;
 with Strings_Edit.Streams;
@@ -364,7 +363,6 @@ package body Gnoga.Server.Connection is
       return GNAT.Sockets.Sock_Addr_Type
    is
       use GNAT.Sockets;
-      use type String;
 
       Address : Sock_Addr_Type;
       Host    : constant String := (if Server_Host = "localhost" then UXString'("127.0.0.1") else Server_Host);
@@ -544,64 +542,27 @@ package body Gnoga.Server.Connection is
                   end;
                else
                   if M = "text/html" then
-                     Client.Content.Finalized := False;
-
-                     declare
-                        ID : Gnoga.Types.Connection_ID;
-                        F  : String := Gnoga.Server.Template_Parser.Simple.Load_View (Adjust_Name);
-                     begin
-                        if Gnoga.Application.Favicon /= Null_UXString and
-                          Index (F, "<meta name=""generator"" content=""Gnoga"" />") > 0 and
-                          Index (F, "favicon.ico") > 0
-                        then
-                           String_Replace
-                             (Source => F, Pattern => "favicon.ico", Replacement => Gnoga.Application.Favicon);
-                        end if;
-                        if Index (F, "/js/ajax.js") > 0 then
-                           Client.Content.Connection_Type := Long_Polling;
-                           Client.Content.Buffer.Add (F);
-
-                           Send_Body (Client, Client.Content'Access, Get);
-
-                           Start_Long_Polling_Connect (Client, ID);
-                        elsif Index (F, "/js/auto.js") > 0 then
-                           Client.Content.Connection_Type := Long_Polling;
-                           Start_Long_Polling_Connect (Client, ID);
-
-                           String_Replace (Source => F, Pattern => "@@Connection_ID@@", Replacement => Image (ID));
-                           Client.Content.Buffer.Add (F);
-
-                           Send_Body (Client, Client.Content'Access, Get);
-                        else
-                           Client.Content.Connection_Type := HTTP;
-                           Client.Content.Buffer.Add (F);
-
-                           Send_Body (Client, Client.Content'Access, Get);
-                        end if;
-                     end;
-                  else
-                     Send_Content_Type (Client, Standard.String (To_UTF_8 (M)));
-                     declare
-                        use Ada.Streams.Stream_IO;
-                     begin
-                        if Is_Open (Client.Content.FS) then
-                           Close (Client.Content.FS);
-                        end if;
-
-                        Open (Client.Content.FS, In_File, Standard.String (To_UTF_8 (F)), Form => "shared=no");
-                        Send_Body (Client, Stream (Client.Content.FS), Get);
-                     end;
+                     Client.Content.Connection_Type := HTTP;
+                     Client.Content.Finalized       := False;
                   end if;
+                  declare
+                     Data : constant access constant Ada.Streams.Stream_Element_Array :=
+                       Gnoga.Embedded_Resources.Get_Content (To_UTF_8 (F));
+                  begin
+                     if Data = null then
+                        if Verbose_Output then
+                           Log ("Reply: Not found");
+                        end if;
+                        Reply_Text (Client, 404, "Not found", "No file " & Quote (Status.File) & " found");
+                     else
+                        Accumulate_Body (Client, Data.all'Unrestricted_Access);
+                        Send_Body (Client, Get);
+                     end if;
+                  end;
                end if;
                if Verbose_Output then
                   Gnoga.Log ("Reply: " & F & " (" & M & ')');
                end if;
-            exception
-               when Ada.Text_IO.Name_Error =>
-                  if Verbose_Output then
-                     Gnoga.Log ("Reply: Not found");
-                  end if;
-                  Reply_Text (Client, 404, "Not found", "No file " & Quote (Status.File) & " found");
             end;
 
          when URI =>
@@ -1818,13 +1779,11 @@ package body Gnoga.Server.Connection is
       end Buffering;
 
       procedure Add (S : in String) is
-         use type String;
       begin
          Buffer := Buffer & S;
       end Add;
 
       procedure Preface (S : in String) is
-         use type String;
       begin
          Buffer := S & Buffer;
       end Preface;

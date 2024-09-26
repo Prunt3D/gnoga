@@ -1047,7 +1047,7 @@ package GNAT.Sockets.Connection_State_Machine.HTTP_Server is
              );
    procedure Accumulate_Body
              (  Client  : in out HTTP_Client;
-                Content : access Stream_Element_Array
+                Content : access constant Stream_Element_Array
              );
    procedure Accumulate_Body
              (  Client  : in out HTTP_Client;
@@ -1742,7 +1742,7 @@ private
            WebSocket_Mask,        -- Mask octets
            WebSocket_Payload_Data -- Payload data octets
         );
-   type Stream_Element_Array_Ptr is access all Stream_Element_Array;
+   type Stream_Element_Array_Ptr is access all constant Stream_Element_Array;
    type Content_Source_Ptr is access all Content_Source'Class;
    type Content_Destination_Ptr is access all Content_Destination'Class;
    type Data_Pool is new Stack_Storage.Pool with null record;

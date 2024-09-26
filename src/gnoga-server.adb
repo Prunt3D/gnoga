@@ -109,7 +109,7 @@ package body Gnoga.Server is
 
    function HTML_Directory return String is
    begin
-      return Find_Subdirectory ("html");
+      return "html/";
    end HTML_Directory;
 
    ------------------
@@ -118,7 +118,7 @@ package body Gnoga.Server is
 
    function JS_Directory return String is
    begin
-      return Find_Subdirectory ("js");
+      return "js/";
    end JS_Directory;
 
    -------------------
@@ -127,7 +127,7 @@ package body Gnoga.Server is
 
    function IMG_Directory return String is
    begin
-      return Find_Subdirectory ("img");
+      return "image/";
    end IMG_Directory;
 
    -------------------
@@ -136,7 +136,7 @@ package body Gnoga.Server is
 
    function CSS_Directory return String is
    begin
-      return Find_Subdirectory ("css");
+      return "css/";
    end CSS_Directory;
 
    ----------------------
@@ -153,19 +153,8 @@ package body Gnoga.Server is
    -------------------------
 
    function Templates_Directory return String is
-      Dir : constant String := Application_Directory & "templates" & Directory_Separator;
-
-      Alt : constant String :=
-        Application_Directory & "share" & Directory_Separator & "gnoga" & Directory_Separator & "templates" &
-        Directory_Separator;
    begin
-      if Ada.Directories.Exists (To_UTF_8 (Dir)) then
-         return Dir;
-      elsif Ada.Directories.Exists (To_UTF_8 (Alt)) then
-         return Alt;
-      else
-         return Application_Directory;
-      end if;
+      return "templates/";
    end Templates_Directory;
 
 end Gnoga.Server;
