@@ -256,7 +256,7 @@ package body Gnoga.Server.Connection is
    -- Gnoga_HTTP_Server --
    -----------------------
 
-   Server_Wait : Connection_Holder_Type;
+   Server_Wait : Server_Wait_Holder_Type;
 
    task type Gnoga_HTTP_Server_Type is
       entry Start;
@@ -796,8 +796,6 @@ package body Gnoga.Server.Connection is
       Gnoga_HTTP_Server.Start;
 
       Server_Wait.Hold;
-
-      Exit_Application_Requested := True;
    end Run;
 
    -------------------
@@ -829,6 +827,11 @@ package body Gnoga.Server.Connection is
       begin
          Connected := False;
       end Release;
+
+      procedure Reset is
+      begin
+         Connected := True;
+      end Reset;
    end Connection_Holder_Type;
 
    type Connection_Holder_Access is access all Connection_Holder_Type;
@@ -837,6 +840,27 @@ package body Gnoga.Server.Connection is
 
    package Connection_Data_Maps is new Ada.Containers.Ordered_Maps
      (Gnoga.Types.Unique_ID, Gnoga.Types.Pointer_to_Connection_Data_Class);
+
+   -----------------------------
+   -- Server_Wait_Holder_Type --
+   -----------------------------
+
+   protected body Server_Wait_Holder_Type is
+      entry Hold when not Connected is
+      begin
+         Connected := True;
+      end Hold;
+
+      procedure Release is
+      begin
+         Connected := False;
+      end Release;
+
+      procedure Reset is
+      begin
+         Connected := True;
+      end Reset;
+   end Server_Wait_Holder_Type;
 
    ---------------------
    -- Event_Task_Type --
@@ -2319,6 +2343,8 @@ package body Gnoga.Server.Connection is
 
          Gnoga_HTTP_Server.Stop;
          Free (Gnoga_HTTP_Server);
+
+         Exit_Application_Requested := False;
       end if;
    end Stop;
 
