@@ -99,13 +99,6 @@ package Gnoga.Server.Connection is
    --  It is used to allow Connect_Event handlers to remain in memory
    --  until the web socket connection is closed.
 
-   protected type Server_Wait_Holder_Type is
-      entry Hold;
-      procedure Release;
-   private
-      Connected : Boolean := True;
-   end Server_Wait_Holder_Type;
-
    procedure Connection_Data
      (ID   : in Gnoga.Types.Connection_ID;
       Data :    access Gnoga.Types.Connection_Data_Type'Class);
